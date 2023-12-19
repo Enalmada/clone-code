@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mjs",
+    "**/*.cjs",
+    ".lintstagedrc.js",
+    "prettier.config.cjs",
+    "build.ts",
+    "vitest.config.ts"
+  ],
+  "compilerOptions": {
+    "noEmit": true,
+  },
+  "exclude": [
+    "dist", "node_modules"
+  ]
+}
