@@ -4,7 +4,7 @@ description: Build Technology
 ---
 
 ## Build
-Using Bun.
+Using Bun right now.
 
 ### Alternative Options
 * [esbuild](https://github.com/evanw/esbuild/issues/3115)
