@@ -62,18 +62,15 @@ async function processFiles(hookName, name, directory = ".") {
     }
   }
 }
-if (require.main === module_src) {
-  const args = process.argv.slice(2);
-  if (args.length < 2) {
-    console.error("Usage: bunx clone-code <HOOK_NAME> <NAME> [DIRECTORY]");
-    process.exit(1);
-  }
-  const [hookName, name, directory] = args;
-  processFiles(hookName, name, directory).catch((error) => {
-    console.error("An error occurred:", error);
-    process.exit(1);
-  });
+
+// src/index.
+var args = process.argv.slice(2);
+if (args.length < 2) {
+  console.error("Usage: bunx clone-code <HOOK_NAME> <NAME> [DIRECTORY]");
+  process.exit(1);
 }
-export {
-  processFiles
-};
+var [hookName, name, directory] = args;
+processFiles(hookName, name, directory).catch((error) => {
+  console.error("An error occurred:", error.message);
+  process.exit(1);
+});

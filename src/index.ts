@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as changeCase from 'change-case';
@@ -87,18 +86,4 @@ export async function processFiles(hookName: string, name: string, directory: st
       }
     }
   }
-}
-
-if (require.main === module) {
-  const args = process.argv.slice(2);
-  if (args.length < 2) {
-    console.error('Usage: bunx clone-code <HOOK_NAME> <NAME> [DIRECTORY]');
-    process.exit(1);
-  }
-
-  const [hookName, name, directory] = args;
-  processFiles(hookName, name, directory).catch((error) => {
-    console.error('An error occurred:', error);
-    process.exit(1);
-  });
 }
