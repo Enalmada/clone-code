@@ -19,6 +19,14 @@ async function processFiles(hookName, name, directory = ".") {
   const pattern = path.join(directory, "**/*.{ts,tsx}");
   const files = glob.sync(pattern, { nodir: true });
   const scriptRunDir = process.cwd();
+  const ejsContext = {
+    name,
+    h: {
+      inflection,
+      changeCase,
+      lower: (str) => changeCase.noCase(str, { delimiter: "" })
+    }
+  };
   for (const file of files) {
     const content = await fs.readFile(file, "utf8");
     const hookIndex = content.indexOf(hookName);
@@ -28,34 +36,35 @@ async function processFiles(hookName, name, directory = ".") {
       const hookContentJSON = content.substring(content.indexOf("{", hookIndex), hookEndIndex - 2).trim();
       try {
         const hookData = JSON.parse(hookContentJSON);
-        const newFilePath = path.resolve(scriptRunDir, ejs.render(hookData.to, {
-          name,
-          h: {
-            inflection,
-            changeCase: {
-              ...changeCase,
-              lower: (str) => changeCase.noCase(str, { delimiter: "" })
-            }
+        if (hookData.addType) {
+          const typeToAdd = ejs.render(hookData.addType, ejsContext);
+          const typeDeclarationRegex = /export type [a-zA-Z]+ = /;
+          const typeMatch = content.match(typeDeclarationRegex);
+          if (typeMatch) {
+            const typeDeclarationIndex = typeMatch.index ?? 0;
+            const updatedContent = content.substring(0, typeDeclarationIndex + typeMatch[0].length) + `'${typeToAdd}' | ` + content.substring(typeDeclarationIndex + typeMatch[0].length);
+            await fs.writeFile(file, updatedContent);
           }
-        }));
-        await ensureDirectoryExistence(newFilePath);
-        await fs.copyFile(file, newFilePath);
-        let newFileContent = await fs.readFile(newFilePath, "utf8");
-        newFileContent = newFileContent.replace(content.substring(hookStartIndex, hookEndIndex), "").trim();
-        hookData.replacements.forEach((replacement) => {
-          const replaceWith = ejs.render(replacement.replace, {
-            name,
-            h: {
-              inflection,
-              changeCase: {
-                ...changeCase,
-                lower: (str) => changeCase.noCase(str, { delimiter: "" })
-              }
-            }
+        }
+        if (hookData.todo) {
+          const todoMessage = ejs.render(hookData.todo, ejsContext);
+          console.log(`TODO in ${file} - ${todoMessage}`);
+          const todoComment = `// TODO - ${todoMessage}\n`;
+          const updatedContent = content.substring(0, hookStartIndex) + todoComment + content.substring(hookStartIndex);
+          await fs.writeFile(file, updatedContent);
+        }
+        if (hookData.to) {
+          const newFilePath = path.resolve(scriptRunDir, ejs.render(hookData.to, ejsContext));
+          await ensureDirectoryExistence(newFilePath);
+          await fs.copyFile(file, newFilePath);
+          let newFileContent = await fs.readFile(newFilePath, "utf8");
+          newFileContent = newFileContent.replace(content.substring(hookStartIndex, hookEndIndex), "").trim();
+          hookData.replacements?.forEach((replacement) => {
+            const replaceWith = ejs.render(replacement.replace, ejsContext);
+            newFileContent = newFileContent.replace(new RegExp(replacement.find, "g"), replaceWith);
           });
-          newFileContent = newFileContent.replace(new RegExp(replacement.find, "g"), replaceWith);
-        });
-        await fs.writeFile(newFilePath, newFileContent);
+          await fs.writeFile(newFilePath, newFileContent);
+        }
       } catch (error) {
         console.error(`Error processing file ${file}:`, error);
       }

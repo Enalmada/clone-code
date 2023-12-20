@@ -12,7 +12,7 @@ describe('processFiles function', () => {
   });
 
   it('should create the transformed file with correct content', async () => {
-    const outputPath = path.resolve(outputDir, 'testentity.ts');
+    const outputPath = path.resolve(outputDir, 'testEntity.ts');
     const exists = await fs
       .stat(outputPath)
       .then(() => true)
@@ -29,7 +29,7 @@ describe('processFiles function', () => {
   afterAll(async () => {
     // Cleanup: Remove the generated file and directory
     try {
-      const outputPath = path.resolve(outputDir, 'TestEntity.ts');
+      const outputPath = path.resolve(outputDir, 'testEntity.ts');
       await fs.unlink(outputPath);
       await fs.rmdir(outputDir);
     } catch (error) {
