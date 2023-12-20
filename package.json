@@ -1,6 +1,6 @@
 {
   "name": "@enalmada/clone-code",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "rm -rf dist && bun build.ts && bun run build:declaration",
     "build:declaration": "tsc --emitDeclarationOnly",
