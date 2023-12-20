@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as changeCase from 'change-case';
@@ -53,23 +54,8 @@ export async function processFiles(hookName: string, name: string, directory: st
       try {
         const hookData = JSON.parse(hookContentJSON) as HookData;
 
-        if (hookData.addType) {
-          const typeToAdd = ejs.render(hookData.addType, ejsContext);
-          const typeDeclarationRegex = /export type [a-zA-Z]+ = /; // Adjust this regex to match your type declaration
-          const typeMatch = content.match(typeDeclarationRegex);
-          if (typeMatch) {
-            const typeDeclarationIndex = typeMatch.index ?? 0;
-            const updatedContent =
-              content.substring(0, typeDeclarationIndex + typeMatch[0].length) +
-              `'${typeToAdd}' | ` +
-              content.substring(typeDeclarationIndex + typeMatch[0].length);
-            await fs.writeFile(file, updatedContent);
-          }
-        }
-
         if (hookData.todo) {
           const todoMessage = ejs.render(hookData.todo, ejsContext);
-          // eslint-disable-next-line no-console
           console.log(`TODO in ${file} - ${todoMessage}`);
           const todoComment = `// TODO - ${todoMessage}\n`;
           const updatedContent =
@@ -77,10 +63,20 @@ export async function processFiles(hookName: string, name: string, directory: st
           await fs.writeFile(file, updatedContent);
         }
 
-        // Process file copying and replacements only if "to" is defined
+        if (hookData.addType) {
+          const typeToAdd = ejs.render(hookData.addType, ejsContext);
+          const typeDeclarationStartIndex = content.indexOf('=', hookEndIndex) + 1;
+          if (typeDeclarationStartIndex > -1) {
+            const updatedContent =
+              content.substring(0, typeDeclarationStartIndex) +
+              ` '${typeToAdd}' |` +
+              content.substring(typeDeclarationStartIndex);
+            await fs.writeFile(file, updatedContent);
+          }
+        }
+
         if (hookData.to) {
           const newFilePath = path.resolve(scriptRunDir, ejs.render(hookData.to, ejsContext));
-
           await ensureDirectoryExistence(newFilePath);
           await fs.copyFile(file, newFilePath);
 

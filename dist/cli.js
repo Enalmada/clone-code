@@ -36,22 +36,20 @@ async function processFiles(hookName, name, directory = ".") {
       const hookContentJSON = content.substring(content.indexOf("{", hookIndex), hookEndIndex - 2).trim();
       try {
         const hookData = JSON.parse(hookContentJSON);
-        if (hookData.addType) {
-          const typeToAdd = ejs.render(hookData.addType, ejsContext);
-          const typeDeclarationRegex = /export type [a-zA-Z]+ = /;
-          const typeMatch = content.match(typeDeclarationRegex);
-          if (typeMatch) {
-            const typeDeclarationIndex = typeMatch.index ?? 0;
-            const updatedContent = content.substring(0, typeDeclarationIndex + typeMatch[0].length) + `'${typeToAdd}' | ` + content.substring(typeDeclarationIndex + typeMatch[0].length);
-            await fs.writeFile(file, updatedContent);
-          }
-        }
         if (hookData.todo) {
           const todoMessage = ejs.render(hookData.todo, ejsContext);
           console.log(`TODO in ${file} - ${todoMessage}`);
           const todoComment = `// TODO - ${todoMessage}\n`;
           const updatedContent = content.substring(0, hookStartIndex) + todoComment + content.substring(hookStartIndex);
           await fs.writeFile(file, updatedContent);
+        }
+        if (hookData.addType) {
+          const typeToAdd = ejs.render(hookData.addType, ejsContext);
+          const typeDeclarationStartIndex = content.indexOf("=", hookEndIndex) + 1;
+          if (typeDeclarationStartIndex > -1) {
+            const updatedContent = content.substring(0, typeDeclarationStartIndex) + ` '${typeToAdd}' |` + content.substring(typeDeclarationStartIndex);
+            await fs.writeFile(file, updatedContent);
+          }
         }
         if (hookData.to) {
           const newFilePath = path.resolve(scriptRunDir, ejs.render(hookData.to, ejsContext));
