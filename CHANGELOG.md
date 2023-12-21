@@ -1,5 +1,11 @@
 # @enalmada/storybook-addon-mock-urql
 
+## 0.0.2
+
+### Patch Changes
+
+- cfd11ef: fix build cli output
+
 ## 0.0.1
 
 ### Patch Changes
