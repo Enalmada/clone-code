@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { processFiles } from '../src'; // Adjust the import path as needed
 
-describe('processFiles function', () => {
+describe('toFile', () => {
   const outputDir = 'test/outputs';
 
   beforeAll(async () => {
