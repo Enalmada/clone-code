@@ -63,6 +63,6 @@
   },
   "type": "module",
   "bin": {
-    "clone-code": "dist/index.js"
+    "clone-code": "dist/cli.js"
   }
 }

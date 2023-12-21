@@ -1,17 +1,18 @@
 // bun types conflicts with dom types so just putting it where it is needed
 /// <reference types="bun-types" />
 
-import { bunBuild, getSourceFiles } from '@enalmada/bun-externals';
+import getExternalsFromCurrentWorkingDirPackageJson, { bunBuild } from '@enalmada/bun-externals';
 
 async function buildWithExternals(): Promise<void> {
-  const entrypoints = await getSourceFiles();
+  // bundling everything but declared deps
+  const externalDeps = await getExternalsFromCurrentWorkingDirPackageJson();
 
   // bunBuild handles build failure
   await bunBuild({
-    entrypoints,
+    entrypoints: ['./src/cli.ts'],
     outdir: './dist',
     target: 'node',
-    external: ['*'],
+    external: [...externalDeps],
     root: './src',
   });
 }

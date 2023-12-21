@@ -27,6 +27,26 @@ export default defineConfig({
               label: 'Getting Started',
               link: '/guides/getting-started/',
             },
+            {
+              label: 'Copy File',
+              link: '/guides/copy-file/',
+            },
+            {
+              label: 'Copy Block',
+              link: '/guides/copy-block/',
+            },
+            {
+              label: 'Add Type',
+              link: '/guides/add-type/',
+            },
+            {
+              label: 'Add Todo',
+              link: '/guides/add-todo/',
+            },
+            {
+              label: 'Context Functions',
+              link: '/guides/context-functions/',
+            },
           ],
         },
         {
@@ -43,6 +63,7 @@ export default defineConfig({
           ],
         },
       ],
+      customCss: ['./src/assets/landing.css', './src/tailwind.css'],
     }),
     react(),
     // applyBaseStyles causes lists to not work anymore
