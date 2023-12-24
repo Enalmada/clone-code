@@ -1,6 +1,3 @@
-// bun types conflicts with dom types so just putting it where it is needed
-/// <reference types="bun-types" />
-
 import getExternalsFromCurrentWorkingDirPackageJson, { bunBuild } from '@enalmada/bun-externals';
 
 async function buildWithExternals(): Promise<void> {

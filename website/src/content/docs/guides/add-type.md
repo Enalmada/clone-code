@@ -6,7 +6,7 @@ description: Add types to const
 `addType` adds to a union.
 
 ```ts
-/* TYPE_HOOK
+/* clone-code TYPE_HOOK
 {
   "addType": "<%= h.changeCase.pascalCase(name) %>"
 }

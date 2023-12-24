@@ -22,7 +22,7 @@ describe('toFile', () => {
     if (exists) {
       const content = await fs.readFile(outputPath, 'utf8');
       expect(content).toContain('export class TestEntity {}');
-      expect(content).not.toContain('/* ENTITY_HOOK');
+      expect(content).not.toContain('/* clone-code ENTITY_HOOK');
     }
   });
 
