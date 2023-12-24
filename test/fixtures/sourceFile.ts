@@ -1,4 +1,4 @@
-/* ENTITY_HOOK
+/* clone-code ENTITY_HOOK
 {
   "toFile": "test/outputs/<%= h.changeCase.camelCase(name) %>.ts",
   "replacements": [

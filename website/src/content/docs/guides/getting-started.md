@@ -28,7 +28,7 @@ Using json, add some transforms.  For example:
 
 
 ```ts
-/* ENTITY_HOOK
+/* clone-code ENTITY_HOOK
 {
   "toFile": "test/outputs/<%= h.changeCase.lower(name) %>.ts",
   "replacements": [

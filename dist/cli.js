@@ -29,7 +29,7 @@ async function processFiles(hookName, name, directory = ".") {
   };
   for (const file of files) {
     let content = await fs.readFile(file, "utf8");
-    let hookIndex = content.indexOf(hookName);
+    let hookIndex = content.indexOf(`/* clone-code ${hookName}`);
     while (hookIndex !== -1) {
       const hookStartIndex = content.lastIndexOf("/*", hookIndex);
       const hookEndIndex = content.indexOf("*/", hookIndex) + 2;
@@ -74,7 +74,7 @@ async function processFiles(hookName, name, directory = ".") {
                 }
               }
               if (hookData.toPlacement) {
-                const hookEndMarker = `/* ${hookName} end */`;
+                const hookEndMarker = `/* clone-code ${hookName} end */`;
                 const blockStartIndex = hookEndIndex;
                 let blockEndIndex = content.indexOf(hookEndMarker, blockStartIndex);
                 if (blockEndIndex !== -1) {

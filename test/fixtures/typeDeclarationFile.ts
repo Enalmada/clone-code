@@ -1,4 +1,4 @@
-/* TYPE_HOOK
+/* clone-code TYPE_HOOK
 {
   "addType": "<%= h.changeCase.pascalCase(name) %>"
 }

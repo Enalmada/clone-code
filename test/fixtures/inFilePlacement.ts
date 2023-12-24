@@ -1,4 +1,4 @@
-/* INFILE_HOOK
+/* clone-code INFILE_HOOK
 {
   "toPlacement": "bottom",
   "replacements": [
@@ -13,4 +13,4 @@
 
 export const taskExample = 'Task example';
 
-/* INFILE_HOOK end */
+/* clone-code INFILE_HOOK end */

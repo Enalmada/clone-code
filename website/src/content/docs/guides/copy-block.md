@@ -8,7 +8,7 @@ description: Copy Block of code
 supports `above | below | bottom`
 
 ```ts
-/* INFILE_HOOK
+/* clone-code INFILE_HOOK
 {
   "toPlacement": "bottom",
   "replacements": [
@@ -23,5 +23,5 @@ supports `above | below | bottom`
 
 export const taskExample = 'Task example';
 
-/* INFILE_HOOK end */
+/* clone-code INFILE_HOOK end */
 ```

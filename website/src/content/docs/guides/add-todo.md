@@ -7,7 +7,7 @@ description: Add todo to file
 Perhaps something defining access control for an entity that must be reviewed by a human. 
 
 ```ts
-/* ENTITY_HOOK
+/* clone-code ENTITY_HOOK
 {
   "todo": "Add permission tests for <%= name %>"
 }

@@ -44,15 +44,14 @@ export async function processFiles(hookName: string, name: string, directory: st
 
   for (const file of files) {
     let content = await fs.readFile(file, 'utf8');
-    let hookIndex = content.indexOf(hookName);
+    let hookIndex = content.indexOf(`/* clone-code ${hookName}`);
 
     while (hookIndex !== -1) {
-      const hookStartIndex = content.lastIndexOf('/*', hookIndex); // Find the start of the hook block
-      const hookEndIndex = content.indexOf('*/', hookIndex) + 2; // Find the end of the hook block
+      const hookStartIndex = content.lastIndexOf('/*', hookIndex);
+      const hookEndIndex = content.indexOf('*/', hookIndex) + 2;
 
-      // Ensure that the hook block is correctly isolated
       if (hookStartIndex !== -1 && hookEndIndex > hookStartIndex) {
-        const hookBlock = content.substring(hookStartIndex, hookEndIndex); // Extract the hook block
+        const hookBlock = content.substring(hookStartIndex, hookEndIndex);
         if (hookBlock.includes('{') && hookBlock.includes('}')) {
           const jsonStartIndex = hookBlock.indexOf('{');
           const jsonEndIndex = hookBlock.lastIndexOf('}');
@@ -122,7 +121,7 @@ export async function processFiles(hookName: string, name: string, directory: st
               }
 
               if (hookData.toPlacement) {
-                const hookEndMarker = `/* ${hookName} end */`;
+                const hookEndMarker = `/* clone-code ${hookName} end */`;
                 const blockStartIndex = hookEndIndex; // Start immediately after the hook block
                 let blockEndIndex = content.indexOf(hookEndMarker, blockStartIndex); // Find the start of the end hook
 
