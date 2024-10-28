@@ -9,3 +9,5 @@ lib
 tmp
 package-lock.json
 .vercel
+.turbo
+.codebuddy

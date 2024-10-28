@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 // src/index.ts
-import {promises as fs} from "fs";
-import * as path from "path";
+import { promises as fs } from "node:fs";
+import * as path from "node:path";
 import * as changeCase from "change-case";
 import ejs from "ejs";
 import * as glob from "glob";
@@ -16,7 +16,8 @@ async function ensureDirectoryExistence(filePath) {
   }
 }
 async function processFiles(hookName, name, directory = ".") {
-  const pattern = path.join(directory, "**/*.{ts,tsx}");
+  const normalizedDir = directory.replace(/\\/g, "/");
+  const pattern = path.posix.join(normalizedDir, "**/*.{ts,tsx}");
   const files = glob.sync(pattern, { nodir: true });
   const scriptRunDir = process.cwd();
   const ejsContext = {
@@ -68,7 +69,7 @@ async function processFiles(hookName, name, directory = ".") {
                 const typeMatch = content.substring(typeDeclarationStart).match(typeDeclarationRegex);
                 if (typeMatch && typeDeclarationStart > -1) {
                   const typeDeclarationIndex = typeDeclarationStart + typeMatch.index;
-                  const updatedContent = content.substring(0, typeDeclarationIndex + typeMatch[0].length) + `'${typeToAdd}' | ` + content.substring(typeDeclarationIndex + typeMatch[0].length);
+                  const updatedContent = `${content.substring(0, typeDeclarationIndex + typeMatch[0].length)}"${typeToAdd}" | ${content.substring(typeDeclarationIndex + typeMatch[0].length)}`;
                   content = updatedContent;
                   await fs.writeFile(file, updatedContent);
                 }
@@ -88,16 +89,17 @@ async function processFiles(hookName, name, directory = ".") {
                   blockContent = blockContent.replace(new RegExp(replacement.find, "g"), replaceWith);
                 });
                 if (!content.includes(blockContent)) {
-                  blockContent = (hookData.toPlacement === "above" ? "\n" : "\n\n") + blockContent + "\n";
+                  blockContent = `${(hookData.toPlacement === "above" ? "\n" : "\n\n") + blockContent}\n`;
                   let updatedContent = content;
                   switch (hookData.toPlacement) {
                     case "above":
                       updatedContent = content.substring(0, hookStartIndex) + blockContent + content.substring(hookStartIndex);
                       break;
-                    case "below":
+                    case "below": {
                       const endCommentIndex = content.indexOf(hookEndMarker, hookEndIndex) + hookEndMarker.length;
                       updatedContent = content.substring(0, endCommentIndex) + blockContent + content.substring(endCommentIndex);
                       break;
+                    }
                     case "bottom":
                       updatedContent = content + blockContent;
                       break;
@@ -124,7 +126,7 @@ async function processFiles(hookName, name, directory = ".") {
   }
 }
 
-// src/index.
+// src/cli.ts
 var args = process.argv.slice(2);
 if (args.length < 2) {
   console.error("Usage: bunx clone-code <HOOK_NAME> <NAME> [DIRECTORY]");

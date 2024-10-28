@@ -6,6 +6,5 @@
   ]
 }
 */
-/* eslint-disable no-console,@typescript-eslint/no-unsafe-assignment */
 
 export class Source {}
