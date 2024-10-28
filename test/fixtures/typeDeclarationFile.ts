@@ -3,4 +3,4 @@
   "addType": "<%= h.changeCase.pascalCase(name) %>"
 }
 */
-export type SubjectType = 'User' | 'Task' | 'all';
+export type SubjectType = "User" | "Task" | "all";

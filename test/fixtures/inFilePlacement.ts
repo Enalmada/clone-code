@@ -11,6 +11,6 @@
 
 // TASK
 
-export const taskExample = 'Task example';
+export const taskExample = "Task example";
 
 /* clone-code INFILE_HOOK end */
